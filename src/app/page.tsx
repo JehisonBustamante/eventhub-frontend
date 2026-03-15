@@ -117,6 +117,7 @@ export default function Home() {
                 key={event.id} 
                 event={event} 
                 onViewDetails={handleViewDetails}
+                onRefresh={fetchEvents}
               />
             ))}
           </div>
@@ -152,6 +153,7 @@ export default function Home() {
           isOpen={isDetailsOpen}
           onClose={() => setIsDetailsOpen(false)}
           event={selectedEvent}
+          onRefresh={fetchEvents}
         />
       )}
     </div>

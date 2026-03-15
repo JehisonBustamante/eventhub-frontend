@@ -46,7 +46,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const data = await apiLogin(credentials);
       const authToken = data.access_token || data.token;
-      const userData = data.user || { email: credentials.email, name: data.name || 'Usuario' };
+      
+      // Normalizar el objeto de usuario: buscar el ID en cualquier lugar
+      const rawUser = data.user || data;
+      const userData = {
+        id: rawUser.id || rawUser._id || rawUser.userId || rawUser.sub || data.userId || data.id,
+        email: rawUser.email || data.email || credentials.email,
+        name: rawUser.name || data.name || 'Usuario'
+      };
       
       localStorage.setItem('token', authToken);
       localStorage.setItem('user', JSON.stringify(userData));
@@ -67,7 +74,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // Opcional: Loguear automáticamente si el backend devuelve un token tras registro
       if (data.token || data.access_token) {
         const authToken = data.access_token || data.token;
-        const newUser = data.user || userData;
+        const newUser = data.user || {
+          ...userData,
+          id: data.id || data._id || data.userId || data.sub
+        };
         localStorage.setItem('token', authToken);
         localStorage.setItem('user', JSON.stringify(newUser));
         setToken(authToken);

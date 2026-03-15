@@ -45,4 +45,14 @@ export const createEvent = async (eventData: any) => {
   return response.data;
 };
 
+export const joinEvent = async (eventId: string) => {
+  const response = await apiClient.post(`/events/${eventId}/join`);
+  return response.data;
+};
+
+export const leaveEvent = async (eventId: string) => {
+  const response = await apiClient.delete(`/events/${eventId}/leave`);
+  return response.data;
+};
+
 export default apiClient;

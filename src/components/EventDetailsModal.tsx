@@ -4,6 +4,8 @@ import React from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'react-hot-toast';
 
+import { joinEvent, leaveEvent } from '@/api/api.client';
+
 interface Event {
   id: string;
   title: string;
@@ -11,27 +13,45 @@ interface Event {
   date: string;
   location: string;
   organizer: string;
+  attendees: string[];
 }
 
 interface EventDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
   event: Event;
+  onRefresh: () => void;
 }
 
-export default function EventDetailsModal({ isOpen, onClose, event }: EventDetailsModalProps) {
+export default function EventDetailsModal({ isOpen, onClose, event, onRefresh }: EventDetailsModalProps) {
   const { user, isAuthenticated } = useAuth();
   
   if (!isOpen) return null;
 
+  const currentUserId = user?.id || user?._id || user?.sub;
+  const isJoined = isAuthenticated && currentUserId && event.attendees?.some((att: any) => {
+    const attendeeId = typeof att === 'string' ? att : (att.id || att._id);
+    return attendeeId === currentUserId;
+  });
   const isCreator = isAuthenticated && user?.name === event.organizer;
 
-  const handleJoin = () => {
-    toast.success('¡Listo! Ya tienes tu lugar asegurado en este evento de élite.', {
-      duration: 4000,
-      icon: '🔥',
-    });
-    onClose();
+  const handleAction = async () => {
+    if (!isAuthenticated) return;
+
+    try {
+      if (isJoined) {
+        await leaveEvent(event.id);
+        toast.success('Inscripción cancelada correctamente');
+      } else {
+        await joinEvent(event.id);
+        toast.success('¡Listo! Ya tienes tu lugar asegurado', { icon: '🔥' });
+      }
+      onRefresh();
+      onClose();
+    } catch (error) {
+      toast.error('Ocurrió un error al procesar tu solicitud');
+      console.error(error);
+    }
   };
 
   return (
@@ -97,10 +117,14 @@ export default function EventDetailsModal({ isOpen, onClose, event }: EventDetai
             
             {isAuthenticated && !isCreator && (
               <button 
-                onClick={handleJoin}
-                className="flex-1 px-8 py-4 rounded-2xl bg-purple-600 hover:bg-purple-500 transition-all text-sm font-black uppercase tracking-tighter text-white shadow-[0_0_30px_rgba(168,85,247,0.4)] hover:shadow-[0_0_50px_rgba(168,85,247,0.6)] transform hover:scale-[1.02] active:scale-98"
+                onClick={handleAction}
+                className={`flex-1 px-8 py-4 rounded-2xl transition-all text-sm font-black uppercase tracking-tighter text-white shadow-xl transform hover:scale-[1.02] active:scale-98 ${
+                  isJoined 
+                    ? 'bg-neutral-800 hover:bg-red-900/40 border border-white/10 hover:border-red-500/30' 
+                    : 'bg-purple-600 hover:bg-purple-500 shadow-[0_0_30px_rgba(168,85,247,0.4)] hover:shadow-[0_0_50px_rgba(168,85,247,0.6)]'
+                }`}
               >
-                Inscribirse al Evento
+                {isJoined ? 'Cancelar Inscripción' : 'Inscribirse al Evento'}
               </button>
             )}
 

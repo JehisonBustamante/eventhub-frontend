@@ -1,10 +1,8 @@
-'use client';
-
-import { useState } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'react-hot-toast';
-import EventDetailsModal from './EventDetailsModal';
+import { joinEvent, leaveEvent } from '@/api/api.client';
 
 interface Event {
   id: string;
@@ -13,20 +11,31 @@ interface Event {
   date: string;
   location: string;
   organizer: string;
-  attendees?: number;
+  attendees: string[]; // IDs de los usuarios inscritos
 }
 
 interface EventCardProps {
   event: Event;
   onViewDetails: (event: Event) => void;
+  onRefresh: () => void;
 }
 
-export default function EventCard({ event, onViewDetails }: EventCardProps) {
+export default function EventCard({ event, onViewDetails, onRefresh }: EventCardProps) {
   const { user, isAuthenticated } = useAuth();
   const router = useRouter();
 
-  // Mock de asistentes si no viene del servidor
-  const attendeeCount = event.attendees ?? Math.floor(Math.random() * 50) + 10;
+  // Cantidad real de asistentes del backend
+  const attendeeCount = event.attendees?.length || 0;
+  
+  // LOGS DE DEPURACIÓN CRÍTICOS
+  const currentUserId = user?.id || user?._id || user?.sub;
+  
+  // Comprobación flexible: soporta array de strings o array de objetos
+  const isJoined = isAuthenticated && currentUserId && event.attendees?.some((att: any) => {
+    const attendeeId = typeof att === 'string' ? att : (att.id || att._id);
+    return attendeeId === currentUserId;
+  });
+
   const isCreator = isAuthenticated && user?.name === event.organizer;
 
   const handleDetails = () => {
@@ -38,12 +47,23 @@ export default function EventCard({ event, onViewDetails }: EventCardProps) {
     }
   };
 
-  const handleJoin = () => {
-    console.log('Inscribiéndose al evento:', event.id);
-    toast.success('¡Listo! Ya tienes tu lugar asegurado', {
-      duration: 4000,
-      icon: '🔥',
-    });
+  const handleAction = async () => {
+    if (!isAuthenticated) return;
+    
+    try {
+      if (isJoined) {
+        await leaveEvent(event.id);
+        toast.success('Inscripción cancelada correctamente');
+      } else {
+        await joinEvent(event.id);
+        toast.success('¡Listo! Ya tienes tu lugar asegurado', { icon: '🔥' });
+      }
+      // Refrescar la lista de eventos para actualizar el estado del botón y contador
+      onRefresh();
+    } catch (error) {
+      toast.error('Ocurrió un error al procesar tu solicitud');
+      console.error(error);
+    }
   };
 
   return (
@@ -100,10 +120,14 @@ export default function EventCard({ event, onViewDetails }: EventCardProps) {
             
             {isAuthenticated && !isCreator && (
               <button 
-                onClick={handleJoin}
-                className="flex-1 px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 transition-all text-[10px] font-black uppercase tracking-tighter text-white shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(168,85,247,0.5)]"
+                onClick={handleAction}
+                className={`flex-1 px-4 py-2.5 rounded-xl transition-all text-[10px] font-black uppercase tracking-tighter text-white shadow-lg ${
+                  isJoined 
+                    ? 'bg-neutral-800 hover:bg-red-900/40 border border-white/5 hover:border-red-500/30' 
+                    : 'bg-purple-600 hover:bg-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_0_25px_rgba(168,85,247,0.5)]'
+                }`}
               >
-                Inscribirse
+                {isJoined ? 'Cancelar Inscripción' : 'Inscribirse'}
               </button>
             )}
 
