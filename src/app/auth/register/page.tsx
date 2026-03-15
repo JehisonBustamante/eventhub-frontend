@@ -20,7 +20,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-[#020202] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-900/30 via-black to-black p-4">
+    <div className="min-h-screen w-full flex items-center justify-center p-4 bg-transparent">
       <div className="w-full max-w-md bg-black/40 backdrop-blur-2xl border border-purple-500/20 rounded-3xl p-10 shadow-[0_0_50px_rgba(168,85,247,0.15)] relative overflow-hidden group">
         {/* Decorative elements */}
         <div className="absolute -top-24 -left-24 w-48 h-48 bg-purple-600/20 rounded-full blur-3xl group-hover:bg-purple-600/30 transition-all duration-700"></div>
@@ -45,7 +45,7 @@ export default function RegisterPage() {
             <input
               {...register('name', { required: 'El nombre es obligatorio' })}
               type="text"
-              className={`w-full bg-[#0a0a0a] border ${errors.name ? 'border-red-500/50' : 'border-white/10'} rounded-2xl px-5 py-3.5 text-zinc-100 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 backdrop-blur-sm [selection:background-color:rgba(168,85,247,0.4)] autofill:shadow-[0_0_0px_1000px_#0a0a0a_inset] [-webkit-text-fill-color:white]`}
+              className={`w-full bg-[#080808] border ${errors.name ? 'border-red-500/50' : 'border-white/10'} rounded-2xl px-5 py-3.5 text-zinc-100 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 backdrop-blur-sm [selection:background-color:rgba(168,85,247,0.4)]`}
               placeholder="Ej. Agente Zero"
             />
             {errors.name && <p className="text-red-500 text-[10px] uppercase font-bold ml-1">{errors.name.message as string}</p>}
@@ -56,7 +56,7 @@ export default function RegisterPage() {
             <input
               {...register('email', { required: 'El email es obligatorio', pattern: { value: /^\S+@\S+$/i, message: 'Email inválido' } })}
               type="email"
-              className={`w-full bg-[#0a0a0a] border ${errors.email ? 'border-red-500/50' : 'border-white/10'} rounded-2xl px-5 py-3.5 text-zinc-100 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 backdrop-blur-sm [selection:background-color:rgba(168,85,247,0.4)] autofill:shadow-[0_0_0px_1000px_#0a0a0a_inset] [-webkit-text-fill-color:white]`}
+              className={`w-full bg-[#080808] border ${errors.email ? 'border-red-500/50' : 'border-white/10'} rounded-2xl px-5 py-3.5 text-zinc-100 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 backdrop-blur-sm [selection:background-color:rgba(168,85,247,0.4)]`}
               placeholder="tu@esencia.com"
             />
             {errors.email && <p className="text-red-500 text-[10px] uppercase font-bold ml-1">{errors.email.message as string}</p>}
@@ -67,7 +67,7 @@ export default function RegisterPage() {
             <input
               {...register('password', { required: 'La contraseña es obligatoria', minLength: { value: 6, message: 'Mínimo 6 caracteres' } })}
               type="password"
-              className={`w-full bg-[#0a0a0a] border ${errors.password ? 'border-red-500/50' : 'border-white/10'} rounded-2xl px-5 py-3.5 text-zinc-100 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 backdrop-blur-sm [selection:background-color:rgba(168,85,247,0.4)] autofill:shadow-[0_0_0px_1000px_#0a0a0a_inset] [-webkit-text-fill-color:white]`}
+              className={`w-full bg-[#080808] border ${errors.password ? 'border-red-500/50' : 'border-white/10'} rounded-2xl px-5 py-3.5 text-zinc-100 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 backdrop-blur-sm [selection:background-color:rgba(168,85,247,0.4)]`}
               placeholder="••••••••"
             />
             {errors.password && <p className="text-red-500 text-[10px] uppercase font-bold ml-1">{errors.password.message as string}</p>}

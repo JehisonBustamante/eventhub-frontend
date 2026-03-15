@@ -43,7 +43,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white font-sans p-8">
+    <div className="min-h-screen bg-transparent text-white font-sans p-8">
       <header className="max-w-6xl mx-auto flex justify-between items-center mb-12">
         <h1 className="text-3xl font-bold tracking-tight">
           Event<span className="text-purple-500 drop-shadow-[0_0_15px_rgba(168,85,247,0.6)]">Hub</span>

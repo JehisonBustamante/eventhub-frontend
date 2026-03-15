@@ -64,7 +64,7 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }: CreateE
             <label className="text-[10px] font-bold text-purple-400 uppercase tracking-widest ml-1">Título del Evento</label>
             <input
               {...register('title', { required: 'El título es obligatorio' })}
-              className={`w-full bg-[#050505] border ${errors.title ? 'border-red-500/50' : 'border-white/10'} rounded-2xl px-5 py-3.5 text-zinc-100 placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all autofill:shadow-[0_0_0px_1000px_#050505_inset] [-webkit-text-fill-color:white]`}
+              className={`w-full bg-[#080808] border ${errors.title ? 'border-red-500/50' : 'border-white/10'} rounded-2xl px-5 py-3.5 text-zinc-100 placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all`}
               placeholder="Ej. Hackathon Nocturna"
             />
             {errors.title && <p className="text-red-500 text-[10px] uppercase font-bold ml-1">{errors.title.message as string}</p>}
@@ -75,7 +75,7 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }: CreateE
             <textarea
               {...register('description', { required: 'La descripción es obligatoria' })}
               rows={3}
-              className={`w-full bg-[#050505] border ${errors.description ? 'border-red-500/50' : 'border-white/10'} rounded-2xl px-5 py-3.5 text-zinc-100 placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all`}
+              className={`w-full bg-[#080808] border ${errors.description ? 'border-red-500/50' : 'border-white/10'} rounded-2xl px-5 py-3.5 text-zinc-100 placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all`}
               placeholder="Cuéntanos más sobre el evento..."
             />
             {errors.description && <p className="text-red-500 text-[10px] uppercase font-bold ml-1">{errors.description.message as string}</p>}
@@ -87,7 +87,7 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }: CreateE
               <input
                 {...register('date', { required: 'La fecha es obligatoria' })}
                 type="date"
-                className={`w-full bg-[#050505] border ${errors.date ? 'border-red-500/50' : 'border-white/10'} rounded-2xl px-5 py-3.5 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all`}
+                className={`w-full bg-[#080808] border ${errors.date ? 'border-red-500/50' : 'border-white/10'} rounded-2xl px-5 py-3.5 text-zinc-100 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all appearance-none`}
               />
               {errors.date && <p className="text-red-500 text-[10px] uppercase font-bold ml-1">{errors.date.message as string}</p>}
             </div>
@@ -95,7 +95,7 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess }: CreateE
               <label className="text-[10px] font-bold text-purple-400 uppercase tracking-widest ml-1">Ubicación</label>
               <input
                 {...register('location', { required: 'La ubicación es obligatoria' })}
-                className={`w-full bg-[#050505] border ${errors.location ? 'border-red-500/50' : 'border-white/10'} rounded-2xl px-5 py-3.5 text-zinc-100 placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all`}
+                className={`w-full bg-[#080808] border ${errors.location ? 'border-red-500/50' : 'border-white/10'} rounded-2xl px-5 py-3.5 text-zinc-100 placeholder-neutral-600 focus:outline-none focus:ring-2 focus:ring-purple-500/50 transition-all`}
                 placeholder="Ciudad / Virtual"
               />
               {errors.location && <p className="text-red-500 text-[10px] uppercase font-bold ml-1">{errors.location.message as string}</p>}

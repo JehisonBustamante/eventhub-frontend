@@ -20,7 +20,74 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #050505;
+  color: #ededed;
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Fondo Mesh Gradient Animado */
+.mesh-gradient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-color: #050505;
+  background-image: 
+    radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+    radial-gradient(at 50% 0%, hsla(271,76%,13%,1) 0, transparent 50%), 
+    radial-gradient(at 100% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+    radial-gradient(at 0% 50%, hsla(271,76%,10%,1) 0, transparent 50%), 
+    radial-gradient(at 100% 50%, hsla(271,76%,10%,1) 0, transparent 50%), 
+    radial-gradient(at 0% 100%, hsla(253,16%,7%,1) 0, transparent 50%), 
+    radial-gradient(at 50% 100%, hsla(271,76%,13%,1) 0, transparent 50%), 
+    radial-gradient(at 100% 100%, hsla(253,16%,7%,1) 0, transparent 50%);
+  filter: blur(80px);
+  opacity: 0.6;
+  animation: mesh-move 20s ease infinite;
+}
+
+@keyframes mesh-move {
+  0% { transform: scale(1) translate(0%, 0%); }
+  33% { transform: scale(1.1) translate(2%, -2%); }
+  66% { transform: scale(0.9) translate(-2%, 2%); }
+  100% { transform: scale(1) translate(0%, 0%); }
+}
+
+/* Corrección Global de Inputs y Autofill */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus {
+  -webkit-text-fill-color: white !important;
+  -webkit-box-shadow: 0 0 0px 1000px #080808 inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Estilización del Date Picker Nativo */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) sepia(100%) saturate(10000%) hue-rotate(240deg);
+  cursor: pointer;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a2a2a;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3a3a3a;
 }

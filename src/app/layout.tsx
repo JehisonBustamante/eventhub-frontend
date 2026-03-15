@@ -30,6 +30,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <div className="mesh-gradient"></div>
         <AuthProvider>
           <Toaster 
             position="top-right"
@@ -41,7 +42,16 @@ export default function RootLayout({
               },
             }}
           />
-          {children}
+          <div className="flex flex-col min-h-screen">
+            <main className="flex-grow">
+              {children}
+            </main>
+            <footer className="py-10 text-center border-t border-white/5 bg-black/20 backdrop-blur-sm">
+              <p className="text-neutral-500 text-xs font-bold uppercase tracking-[0.4em] italic">
+                Creado por <span className="text-purple-500">Jehison Bustamante</span>
+              </p>
+            </footer>
+          </div>
         </AuthProvider>
       </body>
     </html>
