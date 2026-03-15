@@ -5,11 +5,16 @@ import { getEvents } from "@/api/api.client";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import CreateEventModal from "@/components/CreateEventModal";
+import EventCard from "@/components/EventCard";
+import EventDetailsModal from "@/components/EventDetailsModal";
 
 export default function Home() {
   const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const [filterOwnEvents, setFilterOwnEvents] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
 
   const fetchEvents = async () => {
@@ -27,6 +32,15 @@ export default function Home() {
   useEffect(() => {
     fetchEvents();
   }, []);
+
+  const displayedEvents = filterOwnEvents 
+    ? events.filter(e => e.organizer === user?.name)
+    : events;
+
+  const handleViewDetails = (event: any) => {
+    setSelectedEvent(event);
+    setIsDetailsOpen(true);
+  };
 
   return (
     <div className="min-h-screen bg-[#050505] text-white font-sans p-8">
@@ -62,36 +76,48 @@ export default function Home() {
       </header>
 
       <main className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl font-semibold">Eventos Próximos</h2>
-          {isAuthenticated && (
-            <button 
-              onClick={() => setIsModalOpen(true)}
-              className="bg-purple-600 hover:bg-purple-500 px-5 py-2.5 rounded-xl text-sm font-black uppercase tracking-tighter transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:scale-105 active:scale-95"
-            >
-              + Crear Nuevo Evento
-            </button>
-          )}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
+          <div className="space-y-1">
+            <h2 className="text-4xl font-black italic tracking-tighter uppercase">Eventos <span className="text-purple-500 underline underline-offset-8 decoration-white/10">Próximos</span></h2>
+            <p className="text-neutral-500 text-xs font-bold uppercase tracking-widest italic ml-1 select-none">Conexión con la Élite</p>
+          </div>
+          
+          <div className="flex items-center gap-4 w-full md:w-auto">
+            {isAuthenticated && (
+              <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-4 py-2.5 rounded-2xl">
+                <span className="text-[10px] font-black uppercase tracking-tighter text-neutral-400">Mis Eventos</span>
+                <button 
+                  onClick={() => setFilterOwnEvents(!filterOwnEvents)}
+                  className={`w-10 h-5 rounded-full relative transition-all duration-300 ${filterOwnEvents ? 'bg-purple-600' : 'bg-neutral-800'}`}
+                >
+                  <div className={`absolute top-1 w-3 h-3 rounded-full bg-white transition-all duration-300 ${filterOwnEvents ? 'left-6' : 'left-1'}`}></div>
+                </button>
+              </div>
+            )}
+            
+            {isAuthenticated && (
+              <button 
+                onClick={() => setIsModalOpen(true)}
+                className="bg-purple-600 hover:bg-purple-500 px-6 py-3 rounded-2xl text-xs font-black uppercase tracking-tighter transition-all shadow-[0_0_30px_rgba(168,85,247,0.4)] hover:scale-110 active:scale-90 border-t border-purple-400/30"
+              >
+                + Crear Nuevo Evento
+              </button>
+            )}
+          </div>
         </div>
 
         {loading ? (
           <div className="flex justify-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
           </div>
-        ) : events.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {events.map((event: any) => (
-              <div 
+        ) : displayedEvents.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {displayedEvents.map((event: any) => (
+              <EventCard 
                 key={event.id} 
-                className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:border-purple-500/50 transition-all group"
-              >
-                <h3 className="text-xl font-bold mb-2 group-hover:text-purple-400 transition-colors">{event.title}</h3>
-                <p className="text-neutral-400 text-sm mb-4 line-clamp-2">{event.description}</p>
-                <div className="flex justify-between items-center text-xs text-neutral-500">
-                  <span>{new Date(event.date).toLocaleDateString()}</span>
-                  <span className="bg-purple-500/10 text-purple-400 px-2 py-1 rounded-md">{event.location}</span>
-                </div>
-              </div>
+                event={event} 
+                onViewDetails={handleViewDetails}
+              />
             ))}
           </div>
         ) : (
@@ -119,6 +145,15 @@ export default function Home() {
         onClose={() => setIsModalOpen(false)} 
         onSuccess={fetchEvents} 
       />
+
+      {/* Modal de Detalles Global */}
+      {selectedEvent && (
+        <EventDetailsModal
+          isOpen={isDetailsOpen}
+          onClose={() => setIsDetailsOpen(false)}
+          event={selectedEvent}
+        />
+      )}
     </div>
   );
 }
