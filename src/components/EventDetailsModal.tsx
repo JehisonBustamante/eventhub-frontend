@@ -28,6 +28,12 @@ export default function EventDetailsModal({ isOpen, onClose, event, onRefresh }:
   
   if (!isOpen) return null;
 
+  // Comprobar si el evento ya pasó
+  const dateString = event.date.includes('T') ? event.date.split('T')[0] : event.date;
+  const [year, month, day] = dateString.split('-').map(Number);
+  const eventDate = new Date(year, month - 1, day);
+  const isPast = eventDate < new Date(new Date().setHours(0,0,0,0));
+
   const currentUserId = user?.id || user?._id || user?.sub;
   const isJoined = isAuthenticated && currentUserId && event.attendees?.some((att: any) => {
     const attendeeId = typeof att === 'string' ? att : (att.id || att._id);
@@ -58,7 +64,7 @@ export default function EventDetailsModal({ isOpen, onClose, event, onRefresh }:
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/90 backdrop-blur-xl"
+        className="absolute inset-0 bg-black/90"
         onClick={onClose}
       ></div>
 
@@ -88,7 +94,9 @@ export default function EventDetailsModal({ isOpen, onClose, event, onRefresh }:
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             <div className="bg-white/5 border border-white/5 p-4 rounded-2xl">
               <span className="text-[9px] font-bold text-neutral-600 uppercase tracking-widest block mb-1">Fecha</span>
-              <span className="text-white font-bold text-sm">{new Date(event.date).toLocaleDateString()}</span>
+              <span className="text-white font-bold text-sm">
+                {eventDate.toLocaleDateString(undefined, { day: '2-digit', month: '2-digit', year: 'numeric' })}
+              </span>
             </div>
             <div className="bg-white/5 border border-white/5 p-4 rounded-2xl">
               <span className="text-[9px] font-bold text-neutral-600 uppercase tracking-widest block mb-1">Ubicación</span>
@@ -115,23 +123,31 @@ export default function EventDetailsModal({ isOpen, onClose, event, onRefresh }:
               Cerrar
             </button>
             
-            {isAuthenticated && !isCreator && (
-              <button 
-                onClick={handleAction}
-                className={`flex-1 px-8 py-4 rounded-2xl transition-all text-sm font-black uppercase tracking-tighter text-white shadow-xl transform hover:scale-[1.02] active:scale-98 ${
-                  isJoined 
-                    ? 'bg-neutral-800 hover:bg-red-900/40 border border-white/10 hover:border-red-500/30' 
-                    : 'bg-purple-600 hover:bg-purple-500 shadow-[0_0_30px_rgba(168,85,247,0.4)] hover:shadow-[0_0_50px_rgba(168,85,247,0.6)]'
-                }`}
-              >
-                {isJoined ? 'Cancelar Inscripción' : 'Inscribirse al Evento'}
-              </button>
-            )}
-
-            {isCreator && (
-              <div className="flex-1 flex items-center justify-center border border-purple-500/20 bg-purple-500/5 rounded-2xl">
-                <span className="text-xs font-black text-purple-400 uppercase tracking-[0.2em] italic">Gestión de Propietario</span>
+            {isPast ? (
+              <div className="flex-1 flex items-center justify-center border border-white/5 bg-white/5 rounded-2xl">
+                <span className="text-xs font-black text-neutral-600 uppercase tracking-[0.2em] italic">Evento Finalizado</span>
               </div>
+            ) : (
+              <>
+                {isAuthenticated && !isCreator && (
+                  <button 
+                    onClick={handleAction}
+                    className={`flex-1 px-8 py-4 rounded-2xl transition-all text-sm font-black uppercase tracking-tighter text-white shadow-xl transform hover:scale-[1.02] active:scale-98 ${
+                      isJoined 
+                        ? 'bg-neutral-800 hover:bg-red-900/40 border border-white/10 hover:border-red-500/30' 
+                        : 'bg-purple-600 hover:bg-purple-500 shadow-[0_0_30px_rgba(168,85,247,0.4)] hover:shadow-[0_0_50px_rgba(168,85,247,0.6)]'
+                    }`}
+                  >
+                    {isJoined ? 'Cancelar Inscripción' : 'Inscribirse al Evento'}
+                  </button>
+                )}
+
+                {isCreator && (
+                  <div className="flex-1 flex items-center justify-center border border-purple-500/20 bg-purple-500/5 rounded-2xl">
+                    <span className="text-xs font-black text-purple-400 uppercase tracking-[0.2em] italic">Gestión de Propietario</span>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

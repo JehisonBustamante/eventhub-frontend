@@ -5,6 +5,7 @@ import { getEvents } from "@/api/api.client";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import CreateEventModal from "@/components/CreateEventModal";
+import EditEventModal from "@/components/EditEventModal";
 import EventCard from "@/components/EventCard";
 import EventDetailsModal from "@/components/EventDetailsModal";
 
@@ -12,8 +13,10 @@ export default function Home() {
   const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const [editingEvent, setEditingEvent] = useState<any>(null);
   const [filterOwnEvents, setFilterOwnEvents] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
 
@@ -40,6 +43,11 @@ export default function Home() {
   const handleViewDetails = (event: any) => {
     setSelectedEvent(event);
     setIsDetailsOpen(true);
+  };
+
+  const handleEdit = (event: any) => {
+    setEditingEvent(event);
+    setIsEditModalOpen(true);
   };
 
   return (
@@ -118,6 +126,7 @@ export default function Home() {
                 event={event} 
                 onViewDetails={handleViewDetails}
                 onRefresh={fetchEvents}
+                onEdit={handleEdit}
               />
             ))}
           </div>
@@ -146,6 +155,16 @@ export default function Home() {
         onClose={() => setIsModalOpen(false)} 
         onSuccess={fetchEvents} 
       />
+
+      {/* Modal de Edición */}
+      {editingEvent && (
+        <EditEventModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          onSuccess={fetchEvents}
+          event={editingEvent}
+        />
+      )}
 
       {/* Modal de Detalles Global */}
       {selectedEvent && (

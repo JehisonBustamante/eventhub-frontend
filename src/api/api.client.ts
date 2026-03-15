@@ -45,6 +45,11 @@ export const createEvent = async (eventData: any) => {
   return response.data;
 };
 
+export const updateEvent = async (eventId: string, eventData: any) => {
+  const response = await apiClient.patch(`/events/${eventId}`, eventData);
+  return response.data;
+};
+
 export const joinEvent = async (eventId: string) => {
   const response = await apiClient.post(`/events/${eventId}/join`);
   return response.data;

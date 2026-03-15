@@ -3,6 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -27,7 +28,7 @@ body {
   position: relative;
 }
 
-/* Fondo Mesh Gradient Animado */
+/* Fondo Estático de Alto Rendimiento */
 .mesh-gradient {
   position: fixed;
   top: 0;
@@ -37,25 +38,12 @@ body {
   z-index: -1;
   background-color: #050505;
   background-image: 
-    radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-    radial-gradient(at 50% 0%, hsla(271,76%,13%,1) 0, transparent 50%), 
-    radial-gradient(at 100% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-    radial-gradient(at 0% 50%, hsla(271,76%,10%,1) 0, transparent 50%), 
-    radial-gradient(at 100% 50%, hsla(271,76%,10%,1) 0, transparent 50%), 
-    radial-gradient(at 0% 100%, hsla(253,16%,7%,1) 0, transparent 50%), 
-    radial-gradient(at 50% 100%, hsla(271,76%,13%,1) 0, transparent 50%), 
-    radial-gradient(at 100% 100%, hsla(253,16%,7%,1) 0, transparent 50%);
-  filter: blur(80px);
-  opacity: 0.6;
-  animation: mesh-move 20s ease infinite;
+    radial-gradient(circle at 20% 20%, hsla(271,76%,10%,0.4) 0%, transparent 40%),
+    radial-gradient(circle at 80% 80%, hsla(271,76%,10%,0.4) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, hsla(253,16%,7%,1) 0%, transparent 100%);
+  opacity: 1;
 }
-
-@keyframes mesh-move {
-  0% { transform: scale(1) translate(0%, 0%); }
-  33% { transform: scale(1.1) translate(2%, -2%); }
-  66% { transform: scale(0.9) translate(-2%, 2%); }
-  100% { transform: scale(1) translate(0%, 0%); }
-}
+/* Eliminamos mesh-move y transformaciones pesadas */
 
 /* Corrección Global de Inputs y Autofill */
 input:-webkit-autofill,
@@ -71,8 +59,14 @@ textarea:-webkit-autofill:focus {
 
 /* Estilización del Date Picker Nativo */
 input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1) sepia(100%) saturate(10000%) hue-rotate(240deg);
+  filter: invert(0.5) sepia(1) saturate(500%) hue-rotate(230deg) brightness(1.2);
   cursor: pointer;
+  opacity: 0.8;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  filter: invert(0.6) sepia(1) saturate(800%) hue-rotate(240deg) brightness(1.5);
 }
 
 ::-webkit-scrollbar {
